@@ -1,0 +1,9 @@
+{
+  "firebase": "rectangle-party",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
