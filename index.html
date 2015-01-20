@@ -11,7 +11,10 @@
 <body>
   <h1>Rectangle Party</h1>
   <p>To play, either click the button to generate a random rectangle on the screen or you can also create your own by clicking in the rectangle grid.</p>
-  <p><button id="addRectBtn">Add a Random Rectangle</button></p>
+  <p>
+    <button id="add-rect-btn">Add a Random Rectangle</button>
+    <button id="reset-rect-grid">Reset the Game</button>
+  </p>
   <hr/>
   <div id="svg-container"></div>
   <hr/>
@@ -23,9 +26,9 @@
       var svgContainer = document.getElementById("svg-container");
       var boxWidth = svgContainer.clientWidth;
       var boxHeight = svgContainer.clientHeight
-      var rects = [];
+      var rects;
       var rectIntersectMessage = 'Rectangle says: "Excuse me... you are invading my personal space"';
-      var countOfIntersects = 0;
+      var countOfIntersects;
       var defaultRectWidth = 30;
       var defaultRectHeight = 20;
 
@@ -115,10 +118,25 @@
         rects.push(newRect);
       }
 
-      var createAutoRect = function (points) {
+      var createAutoRect = function () {
         var newRect = createRect();
         appendRect(newRect);
       };
+
+      var setup = function () {
+        rects = [];
+        createAutoRect();
+        countOfIntersects = 0;
+        updatePageCounter();
+      }
+
+      var resetRectGrid = function () {
+        var svgViewBox = svgContainer.firstChild;
+        while (svgViewBox.firstChild) {
+          svgViewBox.removeChild(svgViewBox.firstChild);
+        }
+        setup();
+      }
 
       var manualCreateRect = function (startEndPts) {
         startX = startEndPts.startPoints.x;
@@ -155,12 +173,12 @@
         manualCreateRect(draggedPoints);
       }, false);
 
+      setup();
 
-      createAutoRect();
       
-      document.getElementById('addRectBtn').onclick = createAutoRect;
+      document.getElementById('add-rect-btn').onclick = createAutoRect;
+      document.getElementById('reset-rect-grid').onclick = resetRectGrid;
 
-      updatePageCounter();
     })();
   </script>
 </body>
