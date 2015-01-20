@@ -31,6 +31,9 @@
       var countOfIntersects;
       var defaultRectWidth = 30;
       var defaultRectHeight = 20;
+      var fillOpacity = 0.5;
+      var strokeOpacity = 0.8
+
 
       var updatePageCounter = function () {
         document.getElementById('rect-intersect-counter').innerHTML = countOfIntersects;
@@ -58,8 +61,8 @@
         rect.setAttributeNS(null, "height", heightVal);
         rect.setAttributeNS(null, "stroke", "blue");
         rect.setAttributeNS(null, "fill", "green");
-        rect.setAttributeNS(null, "fill-opacity", 0.5);
-        rect.setAttributeNS(null, "stroke-opacity", 0.8);
+        rect.setAttributeNS(null, "fill-opacity", fillOpacity);
+        rect.setAttributeNS(null, "stroke-opacity", strokeOpacity);
         return rect;
       };
 
