@@ -73,30 +73,30 @@
       var checkForIntersect = function (rect1, rect2) {
         var r1w = parseFloat(rect1.getAttribute('width'));
         var r1h = parseFloat(rect1.getAttribute('height'));
-        var r1x1 = parseFloat(rect1.getAttribute('x'));
-        var r1y1 = parseFloat(rect1.getAttribute('y'));
-        var r1x2 = r1x1 + r1w;
-        var r1y2 = r1y1 + r1h;
+        var r1LeftX = parseFloat(rect1.getAttribute('x'));
+        var r1TopY = parseFloat(rect1.getAttribute('y'));
+        var r1RightX = r1LeftX + r1w;
+        var r1BottomY = r1TopY + r1h;
 
         var r2w = parseFloat(rect2.getAttribute('width'));
         var r2h = parseFloat(rect2.getAttribute('height'));
-        var r2x1 = parseFloat(rect2.getAttribute('x'));
-        var r2y1 = parseFloat(rect2.getAttribute('y'));
-        var r2x2 = r2x1 + r2w;
-        var r2y2 = r2y1 + r2h;
+        var r2LeftX = parseFloat(rect2.getAttribute('x'));
+        var r2TopY = parseFloat(rect2.getAttribute('y'));
+        var r2RightX = r2LeftX + r2w;
+        var r2BottomY = r2TopY + r2h;
         var vertAlign = false;
         var horzAlign = false;
 
-        if ((r1y1 <= r2y1) && (r1y2 >= r2y1)) {
+        if ((r1TopY <= r2TopY) && (r1BottomY >= r2TopY)) {
             vertAlign = true;
         }
-        if ((r2y1 <= r1y1) && (r2y2 >= r1y1)) {
+        if ((r2TopY <= r1TopY) && (r2BottomY >= r1TopY)) {
             vertAlign = true;
         }
-        if ((r1x1 <= r2x1) && (r1x2 >= r2x1)) {
+        if ((r1LeftX <= r2LeftX) && (r1RightX >= r2LeftX)) {
             horzAlign = true;
         }
-        if ((r2x1 <= r1x1) && (r2x2 >= r1x1)) {
+        if ((r2LeftX <= r1LeftX) && (r2RightX >= r1LeftX)) {
             horzAlign = true;
         }
 
