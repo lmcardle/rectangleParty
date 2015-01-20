@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<head>
+  <style type="text/css">
+    #svg-container {
+      height: 400px;
+    }
+  </style>
+  
+</head>
+
+<body>
+  <h1>Rectangle Party</h1>
+  <p>To play, either click the button to generate a random rectangle on the screen or you can also create your own sized rectangles by clicking your mouse and dragging to determine the size and location of the rectangle.</p>
+  <p><button id="addRectBtn">Add a Random Rectangle</button></p>
+  <hr/>
+  <div id="svg-container"></div>
+  <hr/>
+  <p>Count of intersected rectangles: <span id="rect-intersect-counter"></span></p>
+  <script type="text/javascript">
+    (function () {
+
+      var xmlns = "http://www.w3.org/2000/svg";
+      var svgContainer = document.getElementById("svg-container");
+      var boxWidth = svgContainer.clientWidth;
+      var boxHeight = svgContainer.clientHeight
+      var rects = [];
+      var rectIntersectMessage = 'Rectangle says: "Excuse me... you are invading my personal space"';
+      var countOfIntersects = 0;
+      var defaultRectWidth = 30;
+      var defaultRectHeight = 20;
+
+      var updatePageCounter = function () {
+        document.getElementById('rect-intersect-counter').innerHTML = countOfIntersects;
+      };
+
+      var createSVGRootElem = function () {
+        var svgElem = document.createElementNS(xmlns, "svg");
+        svgElem.setAttributeNS(null, "viewBox", "0 0 " + boxWidth + " " + boxHeight);
+        svgElem.setAttributeNS(null, "width", boxWidth);
+        svgElem.setAttributeNS(null, "height", boxHeight);
+        svgElem.style.display = "block";
+        return svgElem;
+      };
+      
+      var createRect = function (x, y, width, height) {
+        var xVal, yVal, widthVal, heightVal;
+        xVal = x ? x : Math.random() * boxWidth;
+        yVal = y ? y : Math.random() * boxHeight;
+        widthVal = width ? width : defaultRectWidth;
+        heightVal = height ? height : defaultRectHeight;
+        var rect = document.createElementNS(xmlns, "rect");
+        rect.setAttributeNS(null, "x", xVal);
+        rect.setAttributeNS(null, "y", yVal);
+        rect.setAttributeNS(null, "width", widthVal);
+        rect.setAttributeNS(null, "height", heightVal);
+        rect.setAttributeNS(null, "stroke", "blue");
+        rect.setAttributeNS(null, "fill", "green");
+        rect.setAttributeNS(null, "fill-opacity", 0.5);
+        rect.setAttributeNS(null, "stroke-opacity", 0.8);
+        return rect;
+      };
+
+      var appendSVGElm = function (svgElem, childElem) {
+        svgElem.appendChild(childElem)
+      };
+
+      var svgRootElem = createSVGRootElem();
+      svgContainer.appendChild(svgRootElem);
+
+      var checkForIntersect = function (rect1, rect2) {
+        var r1w = parseFloat(rect1.getAttribute('width'));
+        var r1h = parseFloat(rect1.getAttribute('height'));
+        var r1x1 = parseFloat(rect1.getAttribute('x'));
+        var r1y1 = parseFloat(rect1.getAttribute('y'));
+        var r1x2 = r1x1 + r1w;
+        var r1y2 = r1y1 + r1h;
+
+        var r2w = parseFloat(rect2.getAttribute('width'));
+        var r2h = parseFloat(rect2.getAttribute('height'));
+        var r2x1 = parseFloat(rect2.getAttribute('x'));
+        var r2y1 = parseFloat(rect2.getAttribute('y'));
+        var r2x2 = r2x1 + r2w;
+        var r2y2 = r2y1 + r2h;
+        var vertAlign = false;
+        var horzAlign = false;
+
+        if ((r1y1 <= r2y1) && (r1y2 >= r2y1)) {
+            vertAlign = true;
+        }
+        if ((r2y1 <= r1y1) && (r2y2 >= r1y1)) {
+            vertAlign = true;
+        }
+        if ((r1x1 <= r2x1) && (r1x2 >= r2x1)) {
+            horzAlign = true;
+        }
+        if ((r2x1 <= r1x1) && (r2x2 >= r1x1)) {
+            horzAlign = true;
+        }
+
+        return vertAlign && horzAlign;
+      };
+
+
+
+      var appendRect = function (newRect) {
+        appendSVGElm(svgRootElem, newRect);
+        rects.forEach(function (rect) {
+            var rectsIntersect = checkForIntersect(rect, newRect);
+            if (rectsIntersect) {
+                countOfIntersects += 1;
+                updatePageCounter();
+                alert(rectIntersectMessage);
+            }
+        });
+        rects.push(newRect);
+      }
+
+      var createAutoRect = function (points) {
+        var newRect = createRect();
+        appendRect(newRect);
+      };
+
+      var manualCreateRect = function (startEndPts) {
+        startX = startEndPts.startPoints.x;
+        startY = startEndPts.startPoints.y;
+        endX = startEndPts.endPoints.x;
+        endY = startEndPts.endPoints.y;
+        var rectX, rectY, rectWidth, rectHeight;
+        if (startX < endX) {
+            rectX = startX;
+            rectWidth = endX - startX;
+        } else {
+            rectX = endX;
+            rectWidth = startX - endX;
+        }
+        if (startY < endY) {
+            rectY = startY;
+            rectHeight = endY - startY;
+        } else {
+            rectY = endY;
+            rectHeight = startY - endY;
+        }
+        var newRect = createRect(rectX, rectY, rectWidth, rectHeight);
+        appendRect(newRect);
+      };
+
+      var draggedPoints = {};
+
+      svgContainer.addEventListener('mousedown', function (evt) {
+        draggedPoints.startPoints = {x: evt.offsetX, y: evt.offsetY};
+      }, false);
+
+      svgContainer.addEventListener('mouseup', function (evt) {
+        draggedPoints.endPoints = {x: evt.offsetX, y: evt.offsetY};
+        manualCreateRect(draggedPoints);
+      }, false);
+
+
+      createAutoRect();
+      
+      document.getElementById('addRectBtn').onclick = createAutoRect;
+
+      updatePageCounter();
+    })();
+  </script>
+</body>
